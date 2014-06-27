@@ -9,6 +9,7 @@ __version__ = "0.0.1"
 __authors__ = [
     "Dan Foreman-Mackey",
     "Joe Zuntz",
+    "Júlio Hoffimann Mendes",
     "Manodeep Sinha",
 ]
 __copyright__ = "Copyright 2014 Dan Foreman-Mackey"
