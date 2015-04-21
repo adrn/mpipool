@@ -106,7 +106,7 @@ class MPIPool(object):
                       .format(self.rank, result, status.tag))
             self.comm.isend(result, dest=0, tag=status.tag)
 
-    def map(self, function, tasks):
+    def map(self, function, tasks, callback=None):
         """
         Like the built-in :func:`map` function, apply a function to all
         of the values in a list and return the list of results.
@@ -116,6 +116,9 @@ class MPIPool(object):
 
         :param tasks:
             The list of elements.
+
+        :param callback:
+            A callback function to call on each result.
 
         """
         ntask = len(tasks)
@@ -168,6 +171,10 @@ class MPIPool(object):
                     print("Master waiting for worker {0} with tag {1}"
                           .format(worker, i))
                 result = self.comm.recv(source=worker, tag=i)
+
+                if callback is not None:
+                    callback(result)
+
                 results.append(result)
 
             return results
@@ -192,6 +199,10 @@ class MPIPool(object):
                                         tag=MPI.ANY_TAG, status=status)
                 worker = status.source
                 i = status.tag
+
+                if callback is not None:
+                    callback(result)
+
                 results[i] = result
                 if self.debug:
                     print("Master received from worker {0} with tag {1}"
