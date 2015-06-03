@@ -12,7 +12,7 @@ except ImportError:
 
 
 setup(
-    name="emcee",
+    name="mpipool",
     version="0.0.1",
     author="Daniel Foreman-Mackey",
     author_email="danfm@nyu.edu",
