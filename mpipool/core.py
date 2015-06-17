@@ -6,33 +6,32 @@ from __future__ import (division, print_function, absolute_import,
 
 __all__ = ["MPIPool"]
 __version__ = "0.0.1"
-__copyright__ = "Copyright 2014 Dan Foreman-Mackey"
 
 from mpi4py import MPI
 
 
 class MPIPool(object):
     """
-    A pool that distributes tasks over a set of MPI processes. MPI is an
-    API for distributed memory parallelism.  This pool will let you run
-    emcee without shared memory, letting you use much larger machines
-    with emcee.
+    A pool that distributes tasks over a set of MPI processes using
+    mpi4py. MPI is an API for distributed memory parallelism, used
+    by large cluster computers. This class provides a similar interface
+    to Python's multiprocessing Pool, but currently only supports the
+    :func:`map` method.
 
-    The pool only support the :func:`map` method at the moment because
-    this is the only functionality that emcee needs. That being said,
-    this pool is fairly general and it could be used for other purposes.
+    Contributed initially by `Joe Zuntz <https://github.com/joezuntz>`_.
 
-    Contributed by `Joe Zuntz <https://github.com/joezuntz>`_.
-
-    :param comm: (optional)
+    Parameters
+    ----------
+    comm : (optional)
         The ``mpi4py`` communicator.
 
-    :param debug: (optional)
+    debug : bool (optional)
         If ``True``, print out a lot of status updates at each step.
 
-    :param loadbalance: (optional)
-        if ``True`` and ntask > Ncpus, tries to loadbalance by sending
-        out one task to each cpu first and then sending out the rest
+    loadbalance : bool (optional)
+        if ``True`` and the number of taskes is greater than the
+        number of processes, tries to loadbalance by sending out
+        one task to each cpu first and then sending out the rest
         as the cpus get done.
     """
     def __init__(self, comm=None, debug=False, loadbalance=False):
@@ -105,13 +104,16 @@ class MPIPool(object):
         Like the built-in :func:`map` function, apply a function to all
         of the values in a list and return the list of results.
 
-        :param function:
-            The function to apply to the list.
+        Parameters
+        ----------
+        function : callable
+            The function to apply to each element in the list.
 
-        :param tasks:
-            The list of elements.
+        tasks :
+            A list of tasks -- each element is passed to the input
+            function.
 
-        :param callback:
+        callback : callable (optional)
             A callback function to call on each result.
 
         """
