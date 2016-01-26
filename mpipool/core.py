@@ -1,12 +1,12 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from __future__ import (division, print_function, absolute_import,
                         unicode_literals)
 
-__all__ = ["MPIPool"]
-__version__ = "0.0.1"
+__all__ = ["MPIPool", "MPIPoolException"]
+__version__ = "0.0.2.dev0"
 
+import traceback
 from mpi4py import MPI
 
 
@@ -93,7 +93,12 @@ class MPIPool(object):
 
             # If not a special message, just run the known function on
             # the input and return it asynchronously.
-            result = self.function(task)
+            try:
+                result = self.function(task)
+            except Exception as e:
+                tb = traceback.format_exc()
+                self.comm.isend(MPIPoolException(tb), dest=0, tag=status.tag)
+                return
             if self.debug:
                 print("Worker {0} sending answer {1} with tag {2}."
                       .format(self.rank, result, status.tag))
@@ -167,6 +172,11 @@ class MPIPool(object):
                     print("Master waiting for worker {0} with tag {1}"
                           .format(worker, i))
                 result = self.comm.recv(source=worker, tag=i)
+                if isinstance(result, MPIPoolException):
+                    print("One of the MPIPool workers failed with the "
+                          "exception:")
+                    print(result.traceback)
+                    raise result
 
                 if callback is not None:
                     callback(result)
@@ -254,3 +264,8 @@ class _function_wrapper(object):
 def _error_function(task):
     raise RuntimeError("Pool was sent tasks before being told what "
                        "function to apply.")
+
+
+class MPIPoolException(Exception):
+    def __init__(self, tb):
+        self.traceback = tb
