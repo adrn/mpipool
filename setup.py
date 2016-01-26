@@ -2,7 +2,7 @@
 
 from __future__ import division, print_function
 
-# Standard library
+import sys
 try:
     from setuptools import setup
     setup
@@ -10,10 +10,16 @@ except ImportError:
     from distutils.core import setup
     setup
 
+if sys.version_info[0] < 3:
+    import __builtin__ as builtins
+else:
+    import builtins
+builtins.__MPIPOOL_SETUP__ = True
+import mpipool
 
 setup(
     name="mpipool",
-    version="0.0.1",
+    version=mpipool.__version__,
     author="Adrian Price-Whelan",
     author_email="adrn@astro.columbia.edu",
     packages=["mpipool"],

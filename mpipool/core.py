@@ -4,7 +4,6 @@ from __future__ import (division, print_function, absolute_import,
                         unicode_literals)
 
 __all__ = ["MPIPool", "MPIPoolException"]
-__version__ = "0.0.2.dev0"
 
 import traceback
 from mpi4py import MPI
@@ -95,7 +94,7 @@ class MPIPool(object):
             # the input and return it asynchronously.
             try:
                 result = self.function(task)
-            except Exception as e:
+            except:
                 tb = traceback.format_exc()
                 self.comm.isend(MPIPoolException(tb), dest=0, tag=status.tag)
                 return
