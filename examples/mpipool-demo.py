@@ -1,14 +1,3 @@
-mpipool
-=======
-
-A Python MPI Pool
-
-Minimal workin example
-----------------------
-
-See code in `examples/mpipool-demo.py`:
-
-```python
 # mpipool-demo.py
 
 # Standard library
@@ -41,7 +30,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-Execute the script using `mpiexec` or your computer/cluster's MPI execute script, e.g., here we
-will use 8 cores: `mpiexec -n 8 python mpipool-demo.py`
