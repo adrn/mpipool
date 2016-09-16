@@ -1,3 +1,11 @@
+
+NO LONGER SUPPORTED
+===================
+
+Check out [The Schwimmbad](https://github.com/adrn/schwimmbad) instead.
+
+---------
+
 mpipool
 =======
 
